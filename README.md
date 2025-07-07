@@ -1,1 +1,2 @@
-# Ecommerce-Mern
+# EcommerceMern
+Ecommerce website on Mern stack
