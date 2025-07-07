@@ -73,6 +73,7 @@ const orderSchema = new mongoose.Schema(
 
     // Admin + Customer Notes
     orderNotes: { type: String, maxlength: 500 },
+    orderDate: Date,
 
     // Shipping Tracking Info
     trackingNumber: { type: String },

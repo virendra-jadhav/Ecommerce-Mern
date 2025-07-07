@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createPaymentIntent,
 } = require("../../controllers/user/OrderController");
+const { getAllOrders, getOrderDetails, updateOrderStatus } = require("../../controllers/admin/OrderController");
 
 const orderRouter = express.Router();
 
@@ -20,5 +21,9 @@ const orderRouter = express.Router();
 // router.get('/user/:userId', protect, getUserOrders);
 // router.put('/:id/status', protect, admin, updateOrderStatus);
 // router.post('/:id/refund', protect, admin, processRefund);
+
+orderRouter.get("/", getAllOrders);
+orderRouter.get("/:id", getOrderDetails);
+orderRouter.put("/:id", updateOrderStatus);
 
 module.exports = orderRouter;
