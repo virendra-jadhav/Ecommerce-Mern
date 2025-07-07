@@ -16,6 +16,7 @@ exports.createPaymentIntent = async (req, res) => {
       userId,
       taxPrice = 0,
       shippingPrice = 0,
+      
     } = req.body;
 
     if (!items || items.length === 0) {
@@ -111,7 +112,8 @@ exports.createPaymentIntent = async (req, res) => {
       stripeCustomerId: userId,
       status: 'processing',
       taxPrice,
-      shippingPrice
+      shippingPrice,
+      orderDate: new Date()
     })
     await order.save();
     res.status(200).json({
@@ -415,7 +417,7 @@ exports.sendEmailToTest = async (req, res) => {
         html: "<b>This is a test email sent using Nodemailer and Ethereal</b>",
       });
         console.log("Email sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   res.status(200).json({
     success: true,
     message: info.messageId,
@@ -430,4 +432,56 @@ exports.sendEmailToTest = async (req, res) => {
 }
 
 
+exports.getAllOrdersByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
 
+    const orders = await Order.find({ userId });
+
+    if (!orders.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No orders found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: orders,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const { id, userId } = req.params;
+
+    
+
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: order,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
